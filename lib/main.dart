@@ -10,14 +10,11 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  // ❌ ไม่ใช้ prefs แล้ว
-  // final prefs = await SharedPreferences.getInstance();
-  // final loggedIn = prefs.getBool('logged_in') ?? false;
 
-  // ✅ ใช้ FirebaseAuth เช็คสถานะ
-  final startHome = FirebaseAuth.instance.currentUser != null;
+  final startHome = FirebaseAuth.instance.currentUser != null; //เช็คว่าล็อคอินไว้อยู่มั้ย
 
-  runApp(MyApp(startHome: startHome)); // เหมือนเดิม
+
+  runApp(MyApp(startHome: startHome)); // รันแอพแล้วส่งค่าว่า ล็อคอินอยู่รึป่าวเข้าไปด้วย
 }
 
 class MyApp extends StatelessWidget {
@@ -34,7 +31,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // ✅ เลือกหน้าโดยดูจาก FirebaseAuth
-      home: startHome ? const HomePage() : const Loginpage(),
+      home: startHome ? const HomePage() : const Loginpage(), // เช็คว่าควรไปหน้าไหน
     );
   }
 }

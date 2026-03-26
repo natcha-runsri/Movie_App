@@ -1,10 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../login&register_page/loginpage.dart';
 import '../database/authenticationService.dart'; // ✅ import AuthService
 import 'homepage.dart';
 import 'MoviesPage.dart';
 import 'PromotionPage.dart';
-import '../icon_more_detail.dart/user.dart';
+import '../icon_more_detail/dev_.dart';
+import '../icon_more_detail/contact.dart';
+import '../icon_more_detail/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../database/auth_helpers.dart'; // ✅ import ฟังก์ชันช่วยเหลือ
+import '../icon_more_detail/history.dart';
+
+class _Logo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: const [
+        Padding(
+          padding: EdgeInsets.only(left: 0.5),
+          child: Image(
+            image: AssetImage('images/logo_movi.jpg'),
+            height: 70,
+            width: 70,
+          ),
+        ),
+      ],
+    );
+  }
+}
 
 class Morepage extends StatelessWidget {
   const Morepage({super.key});
@@ -31,7 +55,7 @@ class Morepage extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            // Image.asset('images/movi_logo.png', height: 28), อย่าลืมใส่ logo
+            _Logo(),
             const SizedBox(width: 8),
           ],
         ),
@@ -54,9 +78,14 @@ class Morepage extends StatelessWidget {
             onTap: () {
               // ไปหน้า Account Management
               Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => Profile()),
-            );
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (_) => Profile(
+                        docId: FirebaseAuth.instance.currentUser!.uid,
+                      ),
+                ),
+              );
             },
           ),
           const Divider(color: Colors.white12, thickness: 0.5),
@@ -69,6 +98,9 @@ class Morepage extends StatelessWidget {
             trailing: const Icon(Icons.chevron_right, color: Colors.white),
             onTap: () {
               // ไปหน้า Ticket History
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const TicketHistoryPage()),
+              );
             },
           ),
           const Divider(color: Colors.white12, thickness: 0.5),
@@ -80,7 +112,26 @@ class Morepage extends StatelessWidget {
             ),
             trailing: const Icon(Icons.chevron_right, color: Colors.white),
             onTap: () {
-              // ไปหน้า Ticket History
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => Contact()),
+              );
+            },
+          ),
+
+          const Divider(color: Colors.white12, thickness: 0.5),
+          ListTile(
+            leading: const Icon(Icons.developer_mode, color: Colors.white),
+            title: const Text(
+              'Dev',
+              style: TextStyle(color: Colors.white, fontSize: 24),
+            ),
+            trailing: const Icon(Icons.chevron_right, color: Colors.white),
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => devsPage()),
+              );
             },
           ),
 
@@ -104,7 +155,7 @@ class Morepage extends StatelessWidget {
 
             onTap: () async {
               final auth = AuthenticationService();
-              await auth.logout(); // ✅ เรียกใช้ฟังก์ชัน logout
+              await signOutAndClearCache(context);
               // หลัง logout ให้ไปหน้า login
               Navigator.pushAndRemoveUntil(
                 context,
@@ -135,32 +186,30 @@ class Morepage extends StatelessWidget {
       ),
 
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color.fromARGB(82, 73, 73, 73),
+        backgroundColor: Colors.black,
         selectedItemColor: Colors.yellow,
         unselectedItemColor: Colors.white70,
         type: BottomNavigationBarType.fixed,
-        currentIndex: 3, // ระบุตำแหน่งปัจจุบัน
-        iconSize: 32, // ค่า default คือ 24
-        // ✅ ปรับขนาดตัวหนังสือ
+        currentIndex: 3,
         selectedLabelStyle: const TextStyle(
-          fontSize: 16,
+          fontSize: 13,
           fontWeight: FontWeight.bold,
         ),
         unselectedLabelStyle: const TextStyle(fontSize: 12),
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
+            icon: Icon(FontAwesomeIcons.house),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.movie_filter),
+            icon: Icon(FontAwesomeIcons.film),
             label: 'Movies',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.card_giftcard),
+            icon: Icon(FontAwesomeIcons.gift),
             label: 'Gift',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'More'),
+          BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.bars), label: 'More'),
         ],
         onTap: (index) {
           if (index == 0) {
@@ -169,28 +218,24 @@ class Morepage extends StatelessWidget {
               MaterialPageRoute(builder: (_) => HomePage()),
             );
           }
-          ;
           if (index == 1) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (_) => Moviespage()),
             );
           }
-          ;
           if (index == 2) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (_) => Promotionpage()),
             );
           }
-          ;
           if (index == 3) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (_) => Morepage()),
             );
           }
-          ;
         },
       ),
     );

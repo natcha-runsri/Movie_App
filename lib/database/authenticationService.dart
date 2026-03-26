@@ -79,4 +79,5 @@ class AuthenticationService {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool('logged_in') == true && prefs.getString('uid') != null;
   }
+
 }

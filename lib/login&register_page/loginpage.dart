@@ -5,6 +5,24 @@ import '../database/authenticationService.dart';
 import 'registerpage.dart';
 import '../bar_icon/homepage.dart'; // ถ้ามีหน้า Home จริง ให้ import อันนี้
 
+
+
+// ____________________________ Class Logo ___________________________________
+class _Logo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Image(
+        image: AssetImage('images/logo_movi.jpg'),
+        height: 200,
+        width: 200,
+      ),
+    );
+  }
+}
+//____________________________________________________________________________
+
+// ____________________________ Class หน้าlogin  ______________________________
 class Loginpage extends StatefulWidget {
   const Loginpage({super.key});
 
@@ -13,22 +31,27 @@ class Loginpage extends StatefulWidget {
 }
 
 class _LoginpageState extends State<Loginpage> {
-  final _email = TextEditingController();
-  final _password = TextEditingController();
-  bool _loading = false;
+  final _email = TextEditingController(); //อ่านแก้ไขค่า ที่จะพิม
+  final _password = TextEditingController(); //อ่านแก้ไขค่า ที่จะพิม
+  bool _loading = false; //สถานะกำลังโหลด
 
   @override
   void dispose() {
+    //ล้างค่าที่พิม เมื่อเลิกใช้
     _email.dispose();
     _password.dispose();
     super.dispose();
   }
+//____________________________________________________________________________
+
+// _____________________________ ฟังก์ชั่นล็อคอิน ____________________________________
 
   Future<void> _doLogin() async {
-    final email = _email.text.trim();
+    final email = _email.text.trim(); // trim ตัดเว้นวรรคหน้า/ท้าย
     final pass = _password.text;
 
     if (email.isEmpty || pass.isEmpty) {
+      // ตรวจว่าใส่ข้อมูลครบมั้ย
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('กรอก Email และ Password ให้ครบ')),
       );
@@ -41,15 +64,8 @@ class _LoginpageState extends State<Loginpage> {
       if (!mounted) return;
 
       if (ok) {
-        // ✅ เซฟว่าเคยล็อกอินไว้แล้ว (และจะเอาไปเช็คใน main)
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('logged_in', true);
-        await prefs.setString('email', email); // (ทางเลือก) เก็บว่าใครล็อกอิน
+        // เซฟว่าเคยล็อกอินไว้แล้ว (และจะเอาไปเช็คใน main)
 
-        // ไปหน้า Home ได้เลย ถ้าพร้อม
-        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomePage()));
-
-        // หรือถ้ายังไม่มีหน้า Home ก็แค่แจ้งสำเร็จไว้ก่อน
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('เข้าสู่ระบบสำเร็จ')));
@@ -71,7 +87,9 @@ class _LoginpageState extends State<Loginpage> {
       if (mounted) setState(() => _loading = false);
     }
   }
+  //____________________________________________________________________________
 
+  // ____________________________ UI หน้า Login _________________________________
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,7 +100,7 @@ class _LoginpageState extends State<Loginpage> {
           child: Column(
             children: [
               const Spacer(),
-              const FlutterLogo(size: 100), //ใสส่รูปโลโก้ตรงนี้นะ
+              _Logo(),
               const SizedBox(height: 50),
               Text(
                 'Welcome',

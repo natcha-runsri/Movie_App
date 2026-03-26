@@ -11,20 +11,19 @@ android {
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 
+    // 👉 ใช้ Java 17
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
+    // 👉 ตั้ง jvmTarget 17 (ถ้าจะให้ชัวร์ ใส่ jvmToolchain ด้านล่างด้วย)
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = "17"
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.cinema_app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -33,8 +32,6 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
         }
     }
@@ -42,4 +39,9 @@ android {
 
 flutter {
     source = "../.."
+}
+
+// 👉 แนะนำเพิ่มบล็อกนี้ (เทียบเท่ากำหนด JDK 17 ให้ Kotlin ทั้งโปรเจกต์)
+kotlin {
+    jvmToolchain(17)
 }

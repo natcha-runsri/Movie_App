@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../database/authenticationService.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+// ____________________________ Class Register _________________________________
 class RegisterSheet extends StatefulWidget {
   const RegisterSheet({super.key});
 
@@ -15,7 +16,9 @@ class _RegisterSheetState extends State<RegisterSheet> {
   String confirmPassword = '';
   bool _obscure1 = true;
   bool _obscure2 = true;
+//____________________________________________________________________________
 
+//
   @override
   Widget build(BuildContext context) {
     // รองรับคีย์บอร์ดดันขึ้น
@@ -147,7 +150,7 @@ class _RegisterSheetState extends State<RegisterSheet> {
                           if (email.isEmpty || password.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text('กรอก Email และ Password ให้ครบ'),
+                                content: Text('กรอก Email และ Password AAให้ครบ'),
                               ),
                             );
                             return;
@@ -283,7 +286,7 @@ class _RegisterSheetState extends State<RegisterSheet> {
   }
 }
 
-// ---------- Widgets ช่วยตกแต่ง ----------
+// ____________________________ ช่วยตกแต่ง _________________________________
 class _OutlineField extends StatelessWidget {
   final String label;
   final IconData icon;
@@ -337,3 +340,4 @@ class _OutlineField extends StatelessWidget {
     );
   }
 }
+// ___________________________________________________________________________
