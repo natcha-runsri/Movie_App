@@ -43,3 +43,21 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Secrets / signing / local config (ห้าม commit)
+.env
+.env.*
+local.properties
+**/local.properties
+key.properties
+**/key.properties
+*.jks
+*.keystore
+*.pem
+*.p12
+
+# Gradle / Firebase cache
+.gradle/
+**/.gradle/
+.firebase/
+build/
