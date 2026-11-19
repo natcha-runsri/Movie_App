@@ -4,7 +4,7 @@
 
 🌐 **เว็บที่ deploy:** https://natcha-runsri.github.io/Movie_App/
 
-<!-- TODO: เพิ่มคำอธิบายเป้าหมายของโปรเจกต์ (เช่น รายวิชา/ภาคการศึกษา) -->
+รายวิชา Application Development for Mobile Devices 
 
 ## ฟีเจอร์หลัก
 
@@ -13,7 +13,7 @@
 - **รายการหนัง** เรียงตามล่าสุด/เก่าสุด และกรองเฉพาะหนังที่กด Favorite
 - **รายละเอียดหนัง** เล่นตัวอย่างหนังจาก YouTube (`youtube_player_iframe`) หรือวิดีโอ (`chewie` + `video_player`) และกด Favorite ได้
 - **จองตั๋ว** เลือกโรงภาพยนตร์ วัน และรอบฉาย แล้วเลือกที่นั่งตามประเภทซึ่งมีราคาต่างกัน
-- **ชำระเงิน** แสดงสรุปการจองและใช้โค้ดส่วนลดได้ <!-- TODO: ระบุว่าการชำระเงินเป็นแบบจำลองหรือเชื่อมระบบจริง -->
+- **ชำระเงิน** เป็นการจำลอง
 - **ตั๋วของฉัน** แสดงตั๋วเป็น QR Code (`qr_flutter`) และดู **ประวัติการจองตั๋ว** ได้
 - **โปรโมชัน** และ **การแจ้งเตือน** โดยซ่อนหรืออ่านแล้วได้
 - **โปรไฟล์ผู้ใช้** แก้อีเมลและเบอร์โทร และเลือกรูปอวาตาร์
@@ -99,7 +99,28 @@ flutter run -d <device-id>
 Collection ที่แอปใช้ใน Firestore: `movie`, `cinema`, `showtime`, `screens`, `seats`, `bookings`, `promotion`, `profile` (มี sub-collection `favorites`)
 
 <!-- TODO: repo ยังไม่มีไฟล์ firestore.rules ควรเพิ่มและอธิบาย Security Rules ที่ใช้จริง -->
-<!-- TODO: อธิบายวิธีเตรียมข้อมูลตั้งต้น (หนัง โรง รอบฉาย ที่นั่ง) -->
+### เตรียมข้อมูลตั้งต้นใน Firestore
+
+สร้างข้อมูลใน Cloud Firestore หลังจากตั้งค่า Firebase แล้ว โดยใช้ชื่อ collection และ field ให้ตรงตามที่แอปอ่าน (ชื่อ field แยกตัวพิมพ์เล็ก-ใหญ่) เอกสารที่มี ID อ้างอิงกันควรสร้างตามลำดับนี้:
+
+1. **หนัง — `movie/{movieId}`**: เพิ่มเอกสารจาก Firebase Console หรือหน้าเพิ่มข้อมูลของแอป โดยมี `name`, `description`, `images`, `time` (นาที), `date` (ชนิด Timestamp), `type` (array), `cast` (array), `cast_images` (array), `status`, `trailer`, `director` (array), `direc_images` (array) และ `recommend` (array) ใช้ document ID นี้เป็น `movieId` ในรอบฉาย
+2. **โรง — `cinema/{cinemaId}`**: กำหนด ID เองเพื่อใช้อ้างอิง แล้วเพิ่ม `name`, `address`, `phone`, `screen` (จำนวนห้อง) และ `location` (ชนิด GeoPoint; เว้นได้หากไม่มีพิกัด)
+3. **รอบฉาย — `showtime/{slotId}`**: สร้างหนึ่งเอกสารต่อหนึ่งหนัง หนึ่งโรง หนึ่งวัน และหนึ่งเวลา แนะนำ ID รูปแบบ `c_{cinemaId}_m_{movieId}_{YYYY-MM-DD}_{HHmm}` เช่น `c_central_m_movie01_2026-12-01_1400` โดยมี `movieId`, `movieTitle`, `cinemaId`, `cinemaName`, `dateKey` (ข้อความ `YYYY-MM-DD`), `time` (`HH:mm`) และ `showDate` (Timestamp ของวันนั้นเวลา 00:00 น.) ให้ค่า ID ตรงกับเอกสารหนังและโรง
+4. **ห้องฉายในรอบ — `showtime/{slotId}/screens/{screenId}`**: ใช้ ID ห้อง เช่น `1`; เพิ่ม `screenId`, `audio` (`TH` หรือ `EN`), `format` (`2D` หรือ `3D`), `basePrice` (ตัวเลข), `movieId`, `cinemaId`, `dateKey` และ `time` (array ของเวลา `HH:mm`) แม้เอกสารรอบจะมีเวลาเดียว ให้ใส่เวลานั้นใน array นี้ด้วย เพราะหน้าเลือกที่นั่งค้นเอกสาร `screens`
+5. **ที่นั่ง — `showtime/{slotId}/screens/{screenId}/seats/{row}`**: สร้างเอกสารหนึ่งรายการต่อแถว โดยใช้ ID แถว เช่น `A`; ใส่ `row`, `type` (`Standard`, `Premium` หรือ `VIP`), `price`, `seatId` (array ของเลขที่นั่งเป็นข้อความ เช่น `01` ถึง `14`) และ `status` (array ความยาวเท่ากัน โดยเริ่มทุกตำแหน่งเป็น `unreserved`)
+
+ตัวอย่างแผนผัง:
+
+```text
+movie/movie01
+cinema/central
+showtime/c_central_m_movie01_2026-12-01_1400
+  screens/1
+    seats/A
+    seats/B
+```
+
+เริ่มเตรียมข้อมูลด้วยหนังและโรงก่อน แล้วใช้ ID ของทั้งสองรายการสร้างรอบฉาย จากนั้นสร้างห้องและแถวที่นั่งใต้รอบนั้น หากมีหลายเวลา ให้สร้างรอบฉายแยกต่อเวลาเพื่อให้ `dateKey`, `time` และ `slotId` ระบุรอบได้ชัดเจน ตรวจสอบให้ชื่อ collection เป็น `showtime` (เอกพจน์) และ subcollection เป็น `screens` และ `seats` ตามตัวอย่าง
 
 ## วิธี Build
 
@@ -131,11 +152,9 @@ flutter build apk --release
 
 ตั้งค่าครั้งแรก: ที่ repo ไปที่ **Settings → Pages → Build and deployment → Source** แล้วเลือก **GitHub Actions**
 
-> หมายเหตุ: ขั้น build รันบน `macos-latest` เพราะบาง import ใน `lib/` ใช้ตัวพิมพ์เล็กใหญ่ไม่ตรงกับชื่อไฟล์ (เช่น `homepage.dart` กับ `HomePage.dart`) ถ้าแก้ให้ตรงกันแล้วเปลี่ยนเป็น `ubuntu-latest` ได้
-
 ## ผู้พัฒนา
 
 - นายทัตพงส์ ทองยวง
 - นางสาวณัชชา รุนศรี
 
-<!-- TODO: ระบุรายวิชา/มหาวิทยาลัย และบทบาทของแต่ละคน ถ้าต้องการ -->
+
