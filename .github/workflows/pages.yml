@@ -16,10 +16,7 @@ concurrency:
 
 jobs:
   build:
-    # macOS runner: ไฟล์ระบบไม่สนตัวพิมพ์เล็กใหญ่ เพราะ lib/ มี import ที่ตัวพิมพ์ไม่ตรงกับชื่อไฟล์
-    # (เช่น 'homepage.dart' vs HomePage.dart, 'Morepage.dart' vs MorePage.dart)
-    # ถ้าแก้ import ให้ตรงแล้ว เปลี่ยนเป็น ubuntu-latest ได้
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
