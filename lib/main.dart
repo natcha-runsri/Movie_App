@@ -4,7 +4,7 @@ import 'login&register_page/loginpage.dart';
 import '../database/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // ✅ เพิ่ม
-import 'bar_icon/homepage.dart'; // ✅ import HomePage
+import 'bar_icon/HomePage.dart'; // ✅ import HomePage
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

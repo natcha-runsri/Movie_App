@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../login&register_page/loginpage.dart';
 import '../database/authenticationService.dart'; // ✅ import AuthService
-import 'homepage.dart';
+import 'HomePage.dart';
 import 'MoviesPage.dart';
 import 'PromotionPage.dart';
 import '../icon_more_detail/dev_.dart';

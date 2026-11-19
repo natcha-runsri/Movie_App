@@ -1,4 +1,4 @@
-import 'package:cinema_app/bar_icon/homepage.dart';
+import 'package:cinema_app/bar_icon/HomePage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

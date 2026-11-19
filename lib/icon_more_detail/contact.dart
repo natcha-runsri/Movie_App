@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../bar_icon/Morepage.dart';
+import '../bar_icon/MorePage.dart';
 
 class Contact extends StatelessWidget {
   const Contact({super.key});
